@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor, act } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { useTopUp } from '../useTopUp';
 import { rechargeService } from '@/services/rechargeService';
 import type { BuyRechargeRequest, Ticket } from '@/types';

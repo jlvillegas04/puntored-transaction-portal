@@ -25,7 +25,7 @@ class ApiClient {
         if (authStorage) {
           try {
             const { state } = JSON.parse(authStorage);
-            const { token, type, expiration } = state;
+            const { token, type } = state;
 
             if (token && type) {
               config.headers.Authorization = `${type} ${token}`;

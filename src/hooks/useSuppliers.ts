@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Supplier } from '@/types';
 import { rechargeService } from '@/services/rechargeService';
-import { useAuthStore } from '@/store/authStore';
 import { storageService } from '@/services/storageService';
 
 export const useSuppliers = () => {
@@ -9,7 +8,6 @@ export const useSuppliers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [usingCache, setUsingCache] = useState(false);
-  const { isTokenValid } = useAuthStore();
 
   const fetchSuppliers = async () => {
    
