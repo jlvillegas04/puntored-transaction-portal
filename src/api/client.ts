@@ -73,7 +73,7 @@ class ApiClient {
         status: error.response.status,
         message:
           (error.response.data as any)?.message ||
-          "An error occurred. Please try again.",
+          "Ocurrió un error. Por favor, inténtalo de nuevo más tarde.",
         code: (error.response.data as any)?.code,
         details: error.response.data as Record<string, unknown>,
       };

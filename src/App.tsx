@@ -32,7 +32,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public route */}
         <Route path="/login" element={<LoginPage />} />
 
         {/* Protected routes */}
@@ -41,7 +40,6 @@ function App() {
           <Route path="/history" element={<HistoryPage />} />
         </Route>
 
-        {/* Redirects */}
         <Route path="/" element={<Navigate to="/topup" replace />} />
         <Route path="*" element={<Navigate to="/topup" replace />} />
       </Routes>
