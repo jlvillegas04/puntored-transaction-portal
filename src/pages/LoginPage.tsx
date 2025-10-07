@@ -39,13 +39,13 @@ export const LoginPage = () => {
         <div className="space-y-1 mb-6">
           <h1 className="text-2xl font-bold text-center">Puntored - Transacciones móviles</h1>
           <p className="text-center text-gray-600">
-            Mobile Top-Up Transaction Portal
+            Portal de transacciones móviles con proveedores de Puntored
           </p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="username" className="block text-sm font-medium">
-              Username
+              Nombre de Usuario
             </label>
             <input
               id="username"
@@ -58,7 +58,7 @@ export const LoginPage = () => {
 
           <div className="space-y-2">
             <label htmlFor="password" className="block text-sm font-medium">
-              Password
+              Contraseña
             </label>
             <input
               id="password"
