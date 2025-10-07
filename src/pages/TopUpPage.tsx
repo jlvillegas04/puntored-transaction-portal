@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,9 +15,19 @@ import { BuyRechargeRequest, ApiError } from '@/types';
 import { storageService } from '@/services/storageService';
 
 export const TopUpPage = () => {
-  const { suppliers, loading: loadingSuppliers, error: suppliersError } = useSuppliers();
+  
+  const { suppliers, loading: loadingSuppliers, error: suppliersError, usingCache } = useSuppliers();
   const { buyTopUp, loading: buyingTopUp, ticket, reset } = useTopUp();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (usingCache && !loadingSuppliers) {
+      toast({
+        title: 'Modo sin conexión',
+        description: 'Usando proveedores guardados. Algunos datos pueden no estar actualizados.',
+      });
+    }
+  }, [usingCache, loadingSuppliers, toast]);
 
   const [formData, setFormData] = useState({
     supplier: '',
@@ -112,9 +122,9 @@ export const TopUpPage = () => {
         Longitud: import.meta.env.VITE_DEFAULT_LONGITUDE,
       };
 
-      // Save to history
       const supplierName = suppliers.find(s => s.productCode === formData.supplier)?.name || 'Unknown';
       const ticketData = await buyTopUp(request, supplierName);
+      
       storageService.addTransaction({
         id: request.trace,
         date: ticketData.date,

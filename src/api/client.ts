@@ -18,7 +18,6 @@ class ApiClient {
   }
 
   private setupInterceptors(): void {
-    // Request interceptor: inject auth token
     this.client.interceptors.request.use(
       (config) => {
         const authStorage = localStorage.getItem("auth-storage");
@@ -26,13 +25,13 @@ class ApiClient {
         if (authStorage) {
           try {
             const { state } = JSON.parse(authStorage);
-            const { token, type } = state;
+            const { token, type, expiration } = state;
 
             if (token && type) {
               config.headers.Authorization = `${type} ${token}`;
-            }
+            } 
           } catch (error) {
-            console.error("Failed to parse auth storage:", error);
+            console.error("[API Client] Failed to parse auth storage:", error);
           }
         }
 
@@ -41,13 +40,25 @@ class ApiClient {
       (error) => Promise.reject(error)
     );
 
-    // Response interceptor: normalize errors
     this.client.interceptors.response.use(
       (response) => response,
       (error: AxiosError) => {
+      
         if (error.response?.status === 403) {
-          // Token is invalid, logout user
-          useAuthStore.getState().logout('Su sesión ha expirado por razones de seguridad. Por favor, inicie sesión nuevamente.');
+         
+          // Only logout for auth-related endpoints, not for find-suppliers
+          // The find-suppliers endpoint may temporarily reject valid tokens (backend issue)
+          const url = error.config?.url || '';
+          const isAuthEndpoint = url.includes('/auth') || url.includes('/login');
+          const isSuppliersEndpoint = url.includes('/find-suppliers');
+          
+          if (isAuthEndpoint) {
+            useAuthStore.getState().logout('Su sesión ha expirado por razones de seguridad. Por favor, inicie sesión nuevamente.');
+          } else if (isSuppliersEndpoint) {
+            // Don't logout - let the hook handle this gracefully with cached data
+          } else {
+            console.warn('[API Client] Non-auth endpoint failed with 403 - may be temporary server issue');
+          }
         }
         const normalizedError = this.normalizeError(error);
         return Promise.reject(normalizedError);
@@ -67,13 +78,11 @@ class ApiClient {
         details: error.response.data as Record<string, unknown>,
       };
     } else if (error.request) {
-      // Request made but no response
       return {
         status: 0,
         message: "Network error. Please check your internet connection.",
       };
     } else {
-      // Error setting up request
       return {
         status: 0,
         message: error.message || "An unexpected error occurred.",
