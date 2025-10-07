@@ -27,13 +27,13 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
                   onClick={() => navigate("/topup")}
                   className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md"
                 >
-                  Top-Up
+                  Recargas
                 </button>
                 <button
                   onClick={() => navigate("/history")}
                   className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md"
                 >
-                  History
+                  Histórico
                 </button>
               </nav>
             </div>
