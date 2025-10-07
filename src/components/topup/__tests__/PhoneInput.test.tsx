@@ -53,7 +53,6 @@ describe('PhoneInput', () => {
       const input = screen.getByLabelText(/número de celular/i);
       fireEvent.change(input, { target: { value: '3abc456def' } });
       
-      // The component should call onChange with only numeric values
       expect(handleChange).toHaveBeenCalledWith('3456');
     });
 
@@ -86,7 +85,6 @@ describe('PhoneInput', () => {
       const input = screen.getByLabelText(/número de celular/i);
       fireEvent.change(input, { target: { value: '30012345678901234' } });
       
-      // Should only pass the first 10 digits
       expect(handleChange).toHaveBeenCalledWith('3001234567');
     });
 
