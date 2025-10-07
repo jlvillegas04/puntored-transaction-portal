@@ -26,7 +26,6 @@ export const useAuthStore = create<AuthState>()(
             throw new Error(response.message || "Login failed");
           }
         } catch (error) {
-          // Reset auth state on error
           set({
             token: null,
             type: null,
@@ -53,11 +52,13 @@ export const useAuthStore = create<AuthState>()(
       checkExpiration: (): boolean => {
         const { expiration } = get();
 
-        if (!expiration) return false;
+        if (!expiration) {
+          return false;
+        }
 
         const isExpired = authService.isTokenExpired(expiration);
-
         if (isExpired) {
+          console.log('[AuthStore] Token expired, calling logout');
           get().logout();
           return false;
         }
@@ -68,9 +69,14 @@ export const useAuthStore = create<AuthState>()(
       isTokenValid: (): boolean => {
         const { token, expiration } = get();
 
-        if (!token) return false;
-        if (!authService.validateToken(token)) return false;
+        if (!token) {
+          return false;
+        }
+        if (!authService.validateToken(token)) {
+          return false;
+        }
         if (expiration && authService.isTokenExpired(expiration)) {
+          console.warn('[AuthStore] Token is expired, calling logout');
           get().logout();
           return false;
         }
